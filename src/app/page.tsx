@@ -11,7 +11,9 @@ export default function Home() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
-        router.push(`/search/${query}`);
+        if (query.trim() !== "" && query.length >= 3)
+          router.push(`/search/${query}`);
+        else alert("Search something goofus");
       }
     };
 
@@ -19,8 +21,15 @@ export default function Home() {
     return () => window.removeEventListener("keydown", handleKeyDown); // Cleanup on unmount
   }, [query, router]);
 
+  const handleSearch = (e: MouseEvent) => {
+    e.preventDefault();
+    if (e.button === 0 && query.trim() !== "" && query.length >= 3)
+      router.push(`/search/${query}`);
+    else alert("Search something goofus");
+  };
+
   return (
-    <div className="h-screen bg-black flex justify-center items-center">
+    <div className="h-screen bg-slate-700 flex justify-center items-center">
       <div className="flex w-full max-w-sm relative">
         <input
           type="text"
@@ -31,7 +40,10 @@ export default function Home() {
         />
         <div className="absolute inset-y-0 right-0 flex items-center pr-3 bg-neutral-500 p-4 rounded-md">
           <Link href={{ pathname: `/search/${query}` }}>
-            <Search className="h-8 w-7 hover:text-gray-800 text-white" />
+            <Search
+              className="h-8 w-7 hover:text-gray-800 text-white"
+              onClick={(e) => handleSearch(e as unknown as MouseEvent)}
+            />
           </Link>
         </div>
       </div>
