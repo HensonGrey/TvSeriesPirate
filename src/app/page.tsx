@@ -6,47 +6,96 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [query, setQuery] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Enter") {
-        if (query.trim() !== "" && query.length >= 3)
-          router.push(`/search/${query}`);
-        else alert("Search something goofus");
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown); // Cleanup on unmount
-  }, [query, router]);
-
-  const handleSearch = (e: MouseEvent) => {
-    e.preventDefault();
-    if (e.button === 0 && query.trim() !== "" && query.length >= 3)
-      router.push(`/search/${query}`);
-    else alert("Search something goofus");
+  const validateSearch = (searchQuery: string): string | null => {
+    const trimmedQuery = searchQuery.trim();
+    if (trimmedQuery === "") {
+      return "Please enter a search term";
+    }
+    if (trimmedQuery.length < 3) {
+      return "Search term must be at least 3 characters";
+    }
+    return null;
   };
 
+  const handleSearch = (e: React.MouseEvent | React.KeyboardEvent) => {
+    e.preventDefault();
+    const validationError = validateSearch(query);
+
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    router.push(`/search/${encodeURIComponent(query.trim())}`);
+  };
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSearch(e as unknown as React.KeyboardEvent);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [query, router]);
+
   return (
-    <div className="h-screen bg-slate-700 flex justify-center items-center">
-      <div className="flex w-full max-w-sm relative">
-        <input
-          type="text"
-          placeholder="Search in peace..."
-          onChange={(e) => setQuery(e.target.value)}
-          value={query}
-          className="border-4 rounded-md w-full p-2 bg-slate-200 pl-4"
-        />
-        <div className="absolute inset-y-0 right-0 flex items-center pr-3 bg-neutral-500 p-4 rounded-md">
-          <Link href={{ pathname: `/search/${query}` }}>
-            <Search
-              className="h-8 w-7 hover:text-gray-800 text-white"
-              onClick={(e) => handleSearch(e as unknown as MouseEvent)}
-            />
-          </Link>
+    <div className="h-screen bg-slate-700 flex flex-col justify-center items-center px-4">
+      <div className="w-full max-w-sm space-y-2">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search in peace..."
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setError(null); // Clear error when user types
+            }}
+            value={query}
+            className={`
+              border-4 rounded-md w-full p-2 bg-slate-200 pl-4 pr-16
+              focus:outline-none focus:border-sky-500 transition-colors
+              ${error ? "border-red-400" : "border-slate-300"}
+            `}
+            aria-label="Search query"
+            aria-invalid={error ? "true" : "false"}
+          />
+          <div className="absolute inset-y-0 right-0 flex items-center">
+            <button
+              onClick={(e) => handleSearch(e as React.MouseEvent)}
+              className="h-full px-4 bg-neutral-500 rounded-r-md hover:bg-neutral-600 transition-colors"
+              aria-label="Search"
+            >
+              <Search className="h-6 w-6 text-white" />
+            </button>
+          </div>
         </div>
+
+        {error && (
+          <div className="text-red-400 text-sm px-2 animate-fade-in">
+            {error}
+          </div>
+        )}
       </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.2s ease-out;
+        }
+      `}</style>
     </div>
   );
 }

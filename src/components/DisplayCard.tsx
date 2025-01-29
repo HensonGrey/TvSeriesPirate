@@ -11,9 +11,9 @@ const DisplayCard: React.FC<CardProps> = ({
   // Construct the proper navigation URL based on media type
   const getNavigationUrl = () => {
     if (media_type === "movie") {
-      return `/watching/movie/${title}`;
+      return `/watching/movie/${id}`;
     } else {
-      return `/watching/tv/${title}/season/1/episode/1`;
+      return `/watching/tv/${id}?season=1&episode=1`;
     }
   };
 
