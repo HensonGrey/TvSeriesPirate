@@ -18,11 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Image from "next/image";
 import API_KEY from "@/constants";
 import DisplayCard from "@/components/DisplayCard";
-import Pirate from "../../../../public/images/pirate.png";
-import Link from "next/link";
 import { Search } from "lucide-react";
 
 type MediaType = "tv" | "movie";
@@ -149,20 +146,6 @@ export default function SearchPage() {
     <div className="min-h-screen bg-gradient-to-b from-slate-700 to-slate-600">
       <div className="pt-4 pb-6 px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="flex justify-center mb-4 transform hover:scale-105 transition-transform">
-            <Link href="/">
-              <div className="relative group">
-                <Image
-                  src={Pirate}
-                  alt="Pirate Logo"
-                  className="h-24 w-14 drop-shadow-lg"
-                  priority
-                />
-                <div className="absolute inset-0 bg-white/10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-              </div>
-            </Link>
-          </div>
-
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6">
             <div className="inline-flex items-center gap-3 px-4 py-2 bg-slate-700/50 rounded-full backdrop-blur-sm">
               <h1 className="text-xl font-medium text-white">
