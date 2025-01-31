@@ -11,7 +11,7 @@ export const EpisodeGrid = ({
   currentEpisode,
   onEpisodeSelect,
 }: EpisodeGridProps) => (
-  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+  <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
     {Array.from({ length: episodeCount }).map((_, index) => (
       <Button
         key={index + 1}

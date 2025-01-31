@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import API_KEY from "@/constants";
 import { Season } from "@/types/types";
 
-export const useTVShowData = (id: string, season: number) => {
+export const useTVShowData = (id: string, season: number, episode: number) => {
   const [seasons, setSeasons] = useState<Season[]>([]);
   const [currentSeasonEpisodes, setCurrentSeasonEpisodes] = useState(1);
+  const [overview, setOverview] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -35,8 +36,31 @@ export const useTVShowData = (id: string, season: number) => {
       }
     };
 
-    fetchSeasonData();
-  }, [id, season]);
+    const fetchEpisodeOverview = async () => {
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/tv/${id}/season/${season}/episode/${episode}`,
+          {
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${API_KEY}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch episode data");
+        }
 
-  return { seasons, currentSeasonEpisodes, error };
+        const data = await response.json();
+        setOverview(data.overview);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchSeasonData();
+    fetchEpisodeOverview();
+  }, [id, season, episode]);
+
+  return { seasons, currentSeasonEpisodes, overview, error };
 };

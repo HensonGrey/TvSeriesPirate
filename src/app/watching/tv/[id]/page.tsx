@@ -1,6 +1,6 @@
 "use client";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Season, VideoPlayerState } from "@/types/types";
 import { EpisodeGrid } from "@/components/EpisodeGrid";
 import { NavigationControls } from "@/components/NavigationControls";
@@ -23,22 +23,15 @@ const TVShowPage = () => {
   const {
     seasons,
     currentSeasonEpisodes,
+    overview,
     error: fetchError,
-  } = useTVShowData(id as string, season);
+  } = useTVShowData(id as string, season, episode);
 
   const [playerState, setPlayerState] = useState<VideoPlayerState>({
     isLoading: false,
     error: null,
     isPlaying: false,
   });
-
-  useEffect(() => {
-    setPlayerState({
-      isLoading: false,
-      error: null,
-      isPlaying: false,
-    });
-  }, [season, episode, id]);
 
   const embedUrl = `https://www.2embed.stream/embed/tv/${id}/${season}/${episode}`;
 
@@ -91,7 +84,7 @@ const TVShowPage = () => {
             <Image
               src={WebsiteLogo}
               alt="website logo"
-              className="w-20 h-16 hover:opacity-50"
+              className="w-20 h-18 hover:opacity-50"
             />
           </Link>
           <h1 className="text-2xl font-semibold">
@@ -136,34 +129,37 @@ const TVShowPage = () => {
           </div>
 
           <div className="bg-slate-800 rounded-lg p-6 shadow-xl">
-            <div className="flex flex-col lg:flex-row gap-8">
-              <div className="lg:w-1/3">
-                <div className="relative rounded-lg overflow-hidden">
-                  <img
-                    src={
-                      seasons.find((s: Season) => s.season_number === season)
-                        ?.poster_path
-                        ? `https://image.tmdb.org/t/p/w500/${
-                            seasons.find(
-                              (s: Season) => s.season_number === season
-                            )?.poster_path
-                          }`
-                        : `https://placehold.co/800x1200?text=NOT+FOUND`
-                    }
-                    alt={`${title} Season ${season}`}
-                    className="w-full max-w-[250px] max-h-[350px] transition-all duration-300 hover:scale-105"
-                  />
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="md:col-span-1 flex justify-center items-start">
+                <img
+                  src={
+                    seasons.find((s: Season) => s.season_number === season)
+                      ?.poster_path
+                      ? `https://image.tmdb.org/t/p/w500/${
+                          seasons.find(
+                            (s: Season) => s.season_number === season
+                          )?.poster_path
+                        }`
+                      : `https://placehold.co/800x1200?text=NOT+FOUND`
+                  }
+                  alt={`${title} Season ${season}`}
+                  className="max-w-full h-auto max-h-[400px] object-contain transition-all duration-300 hover:scale-105 rounded-2xl"
+                />
               </div>
 
-              <div className="lg:w-2/3">
-                <div className="mb-4 p-4">
-                  <SeasonSelector
-                    seasons={seasons}
-                    currentSeason={season}
-                    onSeasonChange={handleSeasonChange}
-                  />
-                </div>
+              <div className="md:col-span-2 space-y-4">
+                <SeasonSelector
+                  seasons={seasons}
+                  currentSeason={season}
+                  onSeasonChange={handleSeasonChange}
+                />
+
+                {overview && (
+                  <p className="text-slate-200 mt-4 border rounded-3xl p-8">
+                    {overview}
+                  </p>
+                )}
+
                 <EpisodeGrid
                   episodeCount={currentSeasonEpisodes}
                   currentEpisode={episode}
