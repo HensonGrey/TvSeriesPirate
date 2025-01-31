@@ -4,6 +4,7 @@ import { CardProps } from "@/types/types";
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
+import NextImageWithFallback from "./NextImageWithFallBack";
 
 const DisplayCard: React.FC<CardProps> = ({
   image_path,
@@ -46,16 +47,18 @@ const DisplayCard: React.FC<CardProps> = ({
   return (
     <div className="w-full flex flex-col pb-[150%] relative overflow-hidden rounded-lg shadow-lg hover:cursor-auto">
       <Link href={navigationUrl}>
-        <Image
+        <NextImageWithFallback
           src={
-            image_path
-              ? `https://image.tmdb.org/t/p/w500/${image_path}`
-              : "https://placehold.co/800x800?text=NOT+FOUND"
+            image_path ? `https://image.tmdb.org/t/p/w500/${image_path}` : null
           }
-          width={800}
-          height={1200}
-          alt={title}
+          alt={`${title} Poster`}
+          width={500}
+          height={750}
           className="absolute inset-0 w-full h-full object-cover hover:opacity-75 transition-opacity"
+          fallbackDimensions={{
+            width: 800,
+            height: 1200,
+          }}
         />
         <h3 className="absolute bottom-0 left-0 right-0 bg-black/85 text-white text-sm text-center p-2 truncate">
           {title}

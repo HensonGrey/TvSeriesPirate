@@ -7,6 +7,7 @@ import { useMovieData } from "../../../../../hooks/useMovieData";
 import { VideoPlayerState } from "@/types/types";
 import { useState, useEffect } from "react";
 import { VideoPlayer } from "@/components/VideoPlayer";
+import NextImageWithFallback from "@/components/NextImageWithFallBack";
 
 const MovieScreen = () => {
   const searchParams = useSearchParams();
@@ -79,12 +80,21 @@ const MovieScreen = () => {
         {/* movie poster and overview section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-800 rounded-lg p-6 shadow-xl mt-4">
           <div className="flex justify-center items-start">
-            <Image
-              src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`}
+            <NextImageWithFallback
+              src={
+                movie?.poster_path
+                  ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
+                  : null
+              }
               alt={`${title} Poster`}
-              width={800}
-              height={1200}
+              width={500}
+              height={750}
               className="max-w-full h-auto max-h-[400px] object-contain transition-all duration-300 hover:scale-105 rounded-2xl"
+              // Optional: specify different dimensions for the fallback
+              fallbackDimensions={{
+                width: 400,
+                height: 600,
+              }}
             />
           </div>
           <div className="flex flex-col justify-center items-center space-y-4 text-center">
