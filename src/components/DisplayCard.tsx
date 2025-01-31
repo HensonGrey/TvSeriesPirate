@@ -3,7 +3,6 @@ import API_KEY from "@/constants";
 import { CardProps } from "@/types/types";
 import Link from "next/link";
 import React from "react";
-import Image from "next/image";
 import NextImageWithFallback from "./NextImageWithFallBack";
 
 const DisplayCard: React.FC<CardProps> = ({
