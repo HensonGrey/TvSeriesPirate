@@ -13,7 +13,7 @@ const MovieScreen = () => {
   const searchParams = useSearchParams();
   const { id } = useParams();
 
-  const embedUrl = `https://www.2embed.cc/embed/${id}`;
+  const embedUrl = `https://vidsrc.net/embed/movie/${id}`;
 
   const { movie, error: fetchError } = useMovieData(id as string);
   const title = searchParams.get("title");
