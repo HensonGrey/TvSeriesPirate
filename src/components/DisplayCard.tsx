@@ -3,6 +3,7 @@ import API_KEY from "@/constants";
 import { CardProps } from "@/types/types";
 import Link from "next/link";
 import React from "react";
+import Image from "next/image";
 
 const DisplayCard: React.FC<CardProps> = ({
   image_path,
@@ -45,12 +46,14 @@ const DisplayCard: React.FC<CardProps> = ({
   return (
     <div className="w-full flex flex-col pb-[150%] relative overflow-hidden rounded-lg shadow-lg hover:cursor-auto">
       <Link href={navigationUrl}>
-        <img
+        <Image
           src={
             image_path
               ? `https://image.tmdb.org/t/p/w500/${image_path}`
               : "https://placehold.co/800x800?text=NOT+FOUND"
           }
+          width={800}
+          height={1200}
           alt={title}
           className="absolute inset-0 w-full h-full object-cover hover:opacity-75 transition-opacity"
         />

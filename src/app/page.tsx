@@ -10,32 +10,30 @@ export default function Home() {
 
   const validateSearch = (searchQuery: string): string | null => {
     const trimmedQuery = searchQuery.trim();
-    if (trimmedQuery === "") {
-      return "Please enter a search term";
-    }
-    if (trimmedQuery.length < 3) {
+    if (trimmedQuery === "") return "Please enter a search term";
+    if (trimmedQuery.length < 3)
       return "Search term must be at least 3 characters";
-    }
     return null;
   };
 
-  const handleSearch = (e: React.MouseEvent | React.KeyboardEvent) => {
-    e.preventDefault();
-    const validationError = validateSearch(query);
+  const handleSearch = useCallback(
+    (e: React.MouseEvent | React.KeyboardEvent) => {
+      e.preventDefault();
+      const validationError = validateSearch(query);
 
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
+      if (validationError) {
+        setError(validationError);
+        return;
+      }
 
-    router.push(`/search/${encodeURIComponent(query.trim())}`);
-  };
+      router.push(`/search/${encodeURIComponent(query.trim())}`);
+    },
+    [query, router]
+  );
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === "Enter") {
-        handleSearch(e as unknown as React.KeyboardEvent);
-      }
+      if (e.key === "Enter") handleSearch(e as unknown as React.KeyboardEvent);
     },
     [handleSearch]
   );
@@ -54,7 +52,7 @@ export default function Home() {
             placeholder="Search in peace..."
             onChange={(e) => {
               setQuery(e.target.value);
-              setError(null); // Clear error when user types
+              setError(null);
             }}
             value={query}
             className={`

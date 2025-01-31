@@ -79,9 +79,11 @@ const MovieScreen = () => {
         {/* movie poster and overview section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-800 rounded-lg p-6 shadow-xl mt-4">
           <div className="flex justify-center items-start">
-            <img
+            <Image
               src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`}
               alt={`${title} Poster`}
+              width={800}
+              height={1200}
               className="max-w-full h-auto max-h-[400px] object-contain transition-all duration-300 hover:scale-105 rounded-2xl"
             />
           </div>
