@@ -1,7 +1,6 @@
 "use client";
-import Link from "next/link";
 import { Search } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -32,16 +31,19 @@ export default function Home() {
     router.push(`/search/${encodeURIComponent(query.trim())}`);
   };
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleSearch(e as unknown as React.KeyboardEvent);
-    }
-  };
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        handleSearch(e as unknown as React.KeyboardEvent);
+      }
+    },
+    [handleSearch]
+  );
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [query, router]);
+  }, [handleKeyDown]);
 
   return (
     <div className="h-screen bg-slate-700 flex flex-col justify-center items-center px-4">

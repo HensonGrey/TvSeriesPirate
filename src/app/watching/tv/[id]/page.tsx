@@ -131,7 +131,7 @@ const TVShowPage = () => {
           <div className="bg-slate-800 rounded-lg p-6 shadow-xl">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="md:col-span-1 flex justify-center items-start">
-                <img
+                <Image
                   src={
                     seasons.find((s: Season) => s.season_number === season)
                       ?.poster_path
@@ -143,6 +143,8 @@ const TVShowPage = () => {
                       : `https://placehold.co/800x1200?text=NOT+FOUND`
                   }
                   alt={`${title} Season ${season}`}
+                  width={800}
+                  height={1200}
                   className="max-w-full h-auto max-h-[400px] object-contain transition-all duration-300 hover:scale-105 rounded-2xl"
                 />
               </div>

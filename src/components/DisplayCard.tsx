@@ -27,7 +27,7 @@ const DisplayCard: React.FC<CardProps> = ({
           });
 
           const data = await response.json();
-          let season = data.seasons[0]?.season_number;
+          const season = data.seasons[0]?.season_number;
           setNavigationUrl(
             `/watching/tv/${id}?title=${title}&season=${season}&episode=1`
           );
