@@ -34,7 +34,7 @@ const TVShowPage = () => {
     isPlaying: false,
   });
 
-  const embedUrl = `https://www.2embed.stream/embed/tv/${id}/${season}/${episode}`;
+  const embedUrl = `https://www.2embed.cc/embedtv/${id}&s=${season}&e=${episode}`;
 
   const updateRoute = (newSeason: number, newEpisode: number) => {
     const currentParams = new URLSearchParams(searchParams.toString());
