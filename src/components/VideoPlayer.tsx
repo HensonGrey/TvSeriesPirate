@@ -29,19 +29,20 @@ export const VideoPlayer = ({
       </div>
     ) : (
       <div className="absolute inset-0">
-        {playerState.isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/90 z-10">
-            <Loader2 className="w-12 h-12 animate-spin text-white" />
-          </div>
-        )}
         <iframe
           src={embedUrl}
-          className="w-full h-full"
+          className="absolute inset-0 w-full h-full"
           allowFullScreen
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           onLoad={onLoad}
           onError={onError}
         />
+
+        {playerState.isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/90 z-10">
+            <Loader2 className="w-12 h-12 animate-spin text-white" />
+          </div>
+        )}
       </div>
     )}
   </div>
