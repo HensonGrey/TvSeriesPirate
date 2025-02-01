@@ -23,6 +23,9 @@ export const useTVShowData = (id: string, season: number, episode: number) => {
         }
 
         const data = await response.json();
+        data.seasons = data.seasons?.filter(
+          (s: Season) => s.season_number !== 0
+        );
         setSeasons(data.seasons || []);
 
         const currentSeason = data.seasons?.find(

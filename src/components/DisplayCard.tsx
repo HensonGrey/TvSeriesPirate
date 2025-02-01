@@ -18,23 +18,9 @@ const DisplayCard: React.FC<CardProps> = ({
       if (media_type === "movie") {
         setNavigationUrl(`/watching/movie/${id}?title=${title}`);
       } else {
-        try {
-          const url = `https://api.themoviedb.org/3/tv/${id}`;
-          const response = await fetch(url, {
-            headers: {
-              accept: "application/json",
-              Authorization: `Bearer ${API_KEY}`,
-            },
-          });
-
-          const data = await response.json();
-          const season = data.seasons[0]?.season_number;
-          setNavigationUrl(
-            `/watching/tv/${id}?title=${title}&season=${season}&episode=1`
-          );
-        } catch (err) {
-          console.error(`There was an error navigating!\n${err}`);
-        }
+        setNavigationUrl(
+          `/watching/tv/${id}?title=${title}&season=1&episode=1`
+        );
       }
     };
 
