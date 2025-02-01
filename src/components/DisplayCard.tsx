@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { API_KEY } from "@/constants";
 import { CardProps } from "@/types/types";
 import Link from "next/link";
 import React from "react";
