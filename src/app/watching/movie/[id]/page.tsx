@@ -8,12 +8,13 @@ import { VideoPlayerState } from "@/types/types";
 import { useState, useEffect } from "react";
 import { VideoPlayer } from "@/components/VideoPlayer";
 import NextImageWithFallback from "@/components/NextImageWithFallBack";
+import { providers } from "@/constants";
+import { VideoProviderList } from "@/components/VideoProviderList";
 
 const MovieScreen = () => {
   const searchParams = useSearchParams();
   const { id } = useParams();
-
-  const embedUrl = `https://vidsrc.net/embed/movie/${id}`;
+  const [provider_index, setProviderIndex] = useState<number>(0);
 
   const { movie, error: fetchError } = useMovieData(id as string);
   const title = searchParams.get("title");
@@ -23,6 +24,10 @@ const MovieScreen = () => {
     error: null,
     isPlaying: false,
   });
+
+  const handleProviderChange = (newIndex: number) => {
+    setProviderIndex(newIndex);
+  };
 
   useEffect(() => {
     setPlayerState({
@@ -35,7 +40,6 @@ const MovieScreen = () => {
   return (
     <div className="min-h-screen bg-slate-700 p-4">
       <div className="max-w-6xl mx-auto">
-        {/* website logo */}
         <div className="flex flex-col items-center justify-center gap-4 md:gap-6 text-white mb-6">
           <Link href="/">
             <Image
@@ -47,11 +51,10 @@ const MovieScreen = () => {
           <h1 className="text-2xl font-semibold">{title}</h1>
         </div>
 
-        {/* video section */}
         <div className="space-y-6">
           <div className="relative">
             <VideoPlayer
-              embedUrl={embedUrl}
+              embedUrl={`${providers[provider_index].url}/movie/${id}`}
               playerState={playerState}
               onPlay={() =>
                 setPlayerState((prev: VideoPlayerState) => ({
@@ -75,45 +78,57 @@ const MovieScreen = () => {
               }
             />
           </div>
-        </div>
 
-        {/* movie poster and overview section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-800 rounded-lg p-6 shadow-xl mt-4">
-          <div className="flex justify-center items-start">
-            <NextImageWithFallback
-              src={
-                movie?.poster_path
-                  ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
-                  : null
-              }
-              alt={`${title} Poster`}
-              width={500}
-              height={750}
-              className="max-w-full h-auto max-h-[400px] object-contain transition-all duration-300 hover:scale-105 rounded-2xl"
-              // Optional: specify different dimensions for the fallback
-              fallbackDimensions={{
-                width: 400,
-                height: 600,
-              }}
+          <div className="flex justify-center">
+            <VideoProviderList
+              providers={providers}
+              currentIndex={provider_index}
+              onProviderChange={handleProviderChange}
             />
           </div>
-          <div className="flex flex-col justify-center items-center space-y-4 text-center">
-            <h2 className="text-orange-300 text-3xl">Overview</h2>
-            <p className="text-white max-w-prose">{movie?.overview}</p>
-          </div>
-        </div>
 
-        {(playerState.error || fetchError) && (
-          <div className="text-center text-red-400 bg-red-400/10 p-4 rounded-lg mt-6">
-            <p>{playerState.error || fetchError}</p>
-            <button
-              onClick={() => window.location.reload()}
-              className="mt-2 px-4 py-2 bg-slate-700 rounded-md hover:bg-slate-600 transition-colors text-white"
-            >
-              Try Again
-            </button>
+          <div className="bg-slate-800 rounded-lg p-6 shadow-xl">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="md:col-span-1 flex justify-center items-start">
+                <NextImageWithFallback
+                  src={
+                    movie?.poster_path
+                      ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
+                      : `https://placehold.co/800x1200?text=NOT+FOUND`
+                  }
+                  alt={`${title} Poster`}
+                  width={800}
+                  height={1200}
+                  className="max-w-full h-auto max-h-[400px] object-contain transition-all duration-300 hover:scale-105 rounded-2xl"
+                  fallbackDimensions={{
+                    width: 800,
+                    height: 1200,
+                  }}
+                />
+              </div>
+
+              <div className="md:col-span-2 space-y-4">
+                {movie?.overview && (
+                  <p className="text-slate-200 mt-4 border rounded-3xl p-8">
+                    {movie.overview}
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
-        )}
+
+          {(playerState.error || fetchError) && (
+            <div className="text-center text-red-400 bg-red-400/10 p-4 rounded-lg">
+              <p>{playerState.error || fetchError}</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="mt-2 px-4 py-2 bg-slate-700 rounded-md hover:bg-slate-600 transition-colors text-white"
+              >
+                Try Again
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

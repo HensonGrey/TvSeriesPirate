@@ -21,3 +21,9 @@ export type Movie = {
   overview: string;
   poster_path: string;
 };
+
+export type ProviderProps = {
+  index: number;
+  url: string;
+  button_title: string;
+};

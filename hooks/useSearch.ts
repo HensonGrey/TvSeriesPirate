@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import API_KEY from "@/constants";
+import { API_KEY } from "@/constants";
 import {
   MediaType,
   TMDBSearchResponse,

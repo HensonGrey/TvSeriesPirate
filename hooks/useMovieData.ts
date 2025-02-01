@@ -1,4 +1,4 @@
-import API_KEY from "@/constants";
+import { API_KEY } from "@/constants";
 import { Movie } from "@/types/types";
 import { useEffect, useState } from "react";
 

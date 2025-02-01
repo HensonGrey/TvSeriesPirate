@@ -11,6 +11,8 @@ import Image from "next/image";
 import WebsiteLogo from "@/../public/images/pirate.png";
 import Link from "next/link";
 import NextImageWithFallback from "@/components/NextImageWithFallBack";
+import { providers } from "@/constants";
+import { VideoProviderList } from "@/components/VideoProviderList";
 
 const TVShowPage = () => {
   const router = useRouter();
@@ -34,7 +36,7 @@ const TVShowPage = () => {
     isPlaying: false,
   });
 
-  const embedUrl = `https://vidsrc.xyz/embed/tv/${id}/${season}-${episode}`;
+  const [provider_index, setProviderIndex] = useState<number>(0);
 
   const updateRoute = (newSeason: number, newEpisode: number) => {
     const currentParams = new URLSearchParams(searchParams.toString());
@@ -77,6 +79,10 @@ const TVShowPage = () => {
     }
   };
 
+  const handleProviderChange = (newIndex: number) => {
+    setProviderIndex(newIndex);
+  };
+
   return (
     <div className="min-h-screen bg-slate-700 p-4">
       <div className="max-w-6xl mx-auto">
@@ -96,7 +102,7 @@ const TVShowPage = () => {
         <div className="space-y-6">
           <div className="relative">
             <VideoPlayer
-              embedUrl={embedUrl}
+              embedUrl={`${providers[provider_index].url}/tv/${id}/${season}/${episode}`}
               playerState={playerState}
               onPlay={() =>
                 setPlayerState((prev: VideoPlayerState) => ({
@@ -126,6 +132,14 @@ const TVShowPage = () => {
               canGoNext={
                 !(episode >= currentSeasonEpisodes && season >= seasons.length)
               }
+            />
+          </div>
+
+          <div className="flex justify-center">
+            <VideoProviderList
+              providers={providers}
+              currentIndex={provider_index}
+              onProviderChange={handleProviderChange}
             />
           </div>
 
