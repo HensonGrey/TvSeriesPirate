@@ -13,7 +13,7 @@ const DisplayCard: React.FC<CardProps> = ({
   const [navigationUrl, setNavigationUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    const getNavigationUrl = async () => {
+    const getNavigationUrl = () => {
       if (media_type === "movie") {
         setNavigationUrl(`/watching/movie/${id}?title=${title}`);
       } else {
