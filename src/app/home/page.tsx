@@ -44,7 +44,7 @@ export default function Home() {
   }, [handleKeyDown]);
 
   return (
-    <div className="h-screen bg-slate-700 flex flex-col justify-center items-center px-4">
+    <div className="min-h-screen bg-slate-700 flex flex-col justify-center items-center px-4">
       <div className="w-full max-w-sm space-y-2">
         <div className="relative">
           <input

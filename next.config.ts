@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
   images: {
-    domains: ["image.tmdb.org", "placehold.co"],
+    domains: ["image.tmdb.org", "placehold.co", "www.google.com"],
   },
 };
 
