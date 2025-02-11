@@ -3,9 +3,8 @@ import Image from "next/image";
 
 export default async function SignIn() {
   const session = await auth();
-  console.log(session);
-
   const user = session?.user;
+
   return user ? (
     <>
       <h1 className="text-2xl">Welcome {user.name}</h1>

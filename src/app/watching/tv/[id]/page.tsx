@@ -1,10 +1,5 @@
 "use client";
-import {
-  useParams,
-  useSearchParams,
-  useRouter,
-  redirect,
-} from "next/navigation";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Season, VideoPlayerState } from "@/types/types";
 import { EpisodeGrid } from "@/components/EpisodeGrid";
@@ -18,6 +13,8 @@ import Link from "next/link";
 import NextImageWithFallback from "@/components/NextImageWithFallBack";
 import { providers } from "@/constants";
 import { VideoProviderList } from "@/components/VideoProviderList";
+import { Button } from "@/components/ui/button";
+import { Star } from "lucide-react";
 
 const TVShowPage = () => {
   const router = useRouter();
@@ -146,6 +143,10 @@ const TVShowPage = () => {
               currentIndex={provider_index}
               onProviderChange={handleProviderChange}
             />
+            <Button>
+              <Star />
+              Save
+            </Button>
           </div>
 
           <div className="bg-slate-800 rounded-lg p-6 shadow-xl">

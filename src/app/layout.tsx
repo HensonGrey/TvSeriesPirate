@@ -33,7 +33,7 @@ export default function RootLayout({
           <div className="h-fit flex w-full">
             <AppSidebar />
             <main className="flex-1 min-h-screen bg-gradient-to-b from-slate-700 to-slate-600">
-              <SidebarTrigger />
+              <SidebarTrigger className="sticky top-0" />
               {children}
             </main>
           </div>
