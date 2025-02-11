@@ -48,7 +48,7 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-700 to-slate-600">
+    <div>
       <div className="pt-4 pb-6 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6">

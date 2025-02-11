@@ -38,7 +38,7 @@ const MovieScreen = () => {
   }, [id]);
 
   return (
-    <div className="min-h-screen bg-slate-700 p-4">
+    <div className="p-4">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col items-center justify-center gap-4 md:gap-6 text-white mb-6">
           <Link href="/">
