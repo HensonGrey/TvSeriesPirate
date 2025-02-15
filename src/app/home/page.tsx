@@ -2,8 +2,11 @@
 import { Search } from "lucide-react";
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { setFavourites } from "@/store/WatchListSlice";
 
 export default function Home() {
+  const dispatch = useDispatch();
   const [query, setQuery] = useState("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -42,6 +45,27 @@ export default function Home() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
+
+  useEffect(() => {
+    const fetchUserFavourites = async () => {
+      try {
+        const response = await fetch("/api/watch-list", {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+          },
+        });
+
+        if (!response.ok) throw new Error("Error fetching user data!");
+
+        const { data } = await response.json();
+        dispatch(setFavourites(data));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUserFavourites();
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-700 flex flex-col justify-center items-center px-4">

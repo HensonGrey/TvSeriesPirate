@@ -3,7 +3,6 @@ import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Season, VideoPlayerState } from "@/types/types";
 import { EpisodeGrid } from "@/components/EpisodeGrid";
-import { NavigationControls } from "@/components/NavigationControls";
 import { SeasonSelector } from "@/components/SeasonSelector";
 import { VideoPlayer } from "@/components/VideoPlayer";
 import { useTVShowData } from "../../../../../hooks/useTvData";
@@ -13,8 +12,6 @@ import Link from "next/link";
 import NextImageWithFallback from "@/components/NextImageWithFallBack";
 import { providers } from "@/constants";
 import { VideoProviderList } from "@/components/VideoProviderList";
-import { Button } from "@/components/ui/button";
-import { Star } from "lucide-react";
 
 const TVShowPage = () => {
   const router = useRouter();
@@ -53,32 +50,6 @@ const TVShowPage = () => {
 
   const handleEpisodeSelect = (newEpisode: number) => {
     updateRoute(season, newEpisode);
-  };
-
-  const navigateEpisode = (direction: "prev" | "next") => {
-    let newEpisode = episode;
-    let newSeason = season;
-
-    if (direction === "prev") {
-      if (episode > 1) {
-        newEpisode = episode - 1;
-      } else if (season > 1) {
-        newSeason = season - 1;
-        const prevSeason = seasons.find((s) => s.season_number === newSeason);
-        newEpisode = prevSeason?.episode_count || 1;
-      }
-    } else {
-      if (episode < currentSeasonEpisodes) {
-        newEpisode = episode + 1;
-      } else if (season < seasons.length) {
-        newSeason = season + 1;
-        newEpisode = 1;
-      }
-    }
-
-    if (newEpisode !== episode || newSeason !== season) {
-      updateRoute(newSeason, newEpisode);
-    }
   };
 
   const handleProviderChange = (newIndex: number) => {
@@ -127,14 +98,6 @@ const TVShowPage = () => {
                 })
               }
             />
-            <NavigationControls
-              onPrevious={() => navigateEpisode("prev")}
-              onNext={() => navigateEpisode("next")}
-              canGoPrevious={!(episode <= 1 && season <= 1)}
-              canGoNext={
-                !(episode >= currentSeasonEpisodes && season >= seasons.length)
-              }
-            />
           </div>
 
           <div className="flex justify-center">
@@ -143,10 +106,6 @@ const TVShowPage = () => {
               currentIndex={provider_index}
               onProviderChange={handleProviderChange}
             />
-            <Button>
-              <Star />
-              Save
-            </Button>
           </div>
 
           <div className="bg-slate-800 rounded-lg p-6 shadow-xl">
