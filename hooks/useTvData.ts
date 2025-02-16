@@ -11,12 +11,17 @@ export const useTVShowData = (id: string, season: number, episode: number) => {
   useEffect(() => {
     const fetchSeasonData = async () => {
       try {
-        const response = await fetch(`https://api.themoviedb.org/3/tv/${id}`, {
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${API_KEY}`,
-          },
-        });
+        const response = await fetch(
+          `/api/search/details?id=${encodeURIComponent(
+            id
+          )}&mediaType=${encodeURIComponent("tv")}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-type": "application/json",
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch show data");
@@ -42,11 +47,15 @@ export const useTVShowData = (id: string, season: number, episode: number) => {
     const fetchEpisodeOverview = async () => {
       try {
         const response = await fetch(
-          `https://api.themoviedb.org/3/tv/${id}/season/${season}/episode/${episode}`,
+          `/api/search/details/episode?id=${encodeURIComponent(
+            id
+          )}&season=${encodeURIComponent(season)}&episode=${encodeURIComponent(
+            episode
+          )}`,
           {
+            method: "GET",
             headers: {
-              accept: "application/json",
-              Authorization: `Bearer ${API_KEY}`,
+              "Content-type": "application/json",
             },
           }
         );

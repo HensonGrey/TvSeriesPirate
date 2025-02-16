@@ -1,6 +1,6 @@
 import { ProviderProps } from "./types/types";
 
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+const API_KEY = process.env.NEXT_API_KEY;
 const providers: ProviderProps[] = [
   {
     index: 0,

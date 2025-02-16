@@ -7,6 +7,7 @@ import { setFavourites } from "@/store/WatchListSlice";
 
 export default function Home() {
   const dispatch = useDispatch();
+
   const [query, setQuery] = useState("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { API_KEY } from "@/constants";
 import {
   MediaType,
   TMDBSearchResponse,
@@ -24,17 +23,17 @@ export const useSearch = (
       setError(null);
 
       try {
-        const url = new URL(`https://api.themoviedb.org/3/search/${mediaType}`);
-        url.searchParams.append("query", query);
-        url.searchParams.append("language", "en-US");
-        url.searchParams.append("page", page.toString());
-
-        const response = await fetch(url.toString(), {
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${API_KEY}`,
-          },
-        });
+        const response = await fetch(
+          `/api/search?mediaType=${encodeURIComponent(
+            mediaType
+          )}&query=${encodeURIComponent(query)}&page=${page}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-type": "application/json",
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

@@ -1,19 +1,10 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import Image from "next/image";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { useDispatch } from "react-redux";
-import { setFavourites } from "@/store/WatchListSlice";
+import { signIn, useSession } from "next-auth/react";
 
 export default function SignIn() {
-  const { data: session, status } = useSession();
-  const dispatch = useDispatch();
-  const user = session?.user;
-
-  const handleSignOut = async () => {
-    dispatch(setFavourites([]));
-    await signOut();
-  };
+  const { status } = useSession();
 
   if (status === "loading") {
     return (
@@ -23,23 +14,7 @@ export default function SignIn() {
     );
   }
 
-  return user ? (
-    <div className="flex flex-col items-center gap-4 p-4 border border-gray-600 rounded-lg bg-gray-800/50 max-w-md w-full mx-auto shadow-xl">
-      <Image
-        src="https://www.google.com/favicon.ico"
-        alt="google logo"
-        width={25}
-        height={25}
-      />
-      <h2 className="text-lg text-white font-semibold">{user.name}</h2>
-      <button
-        onClick={handleSignOut}
-        className="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition-all"
-      >
-        Sign out
-      </button>
-    </div>
-  ) : (
+  return (
     <div className="flex flex-col border border-gray-400/20 bg-gray-800/50 p-8 backdrop-blur-sm shadow-xl max-w-md w-full mx-4 gap-8">
       <div>
         <h1 className="text-2xl font-bold text-white text-center">

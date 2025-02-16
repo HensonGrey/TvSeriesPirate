@@ -17,10 +17,8 @@ const DisplayCard: React.FC<CardProps> = ({
 }) => {
   const dispatch = useDispatch();
   const favourites = useSelector((state: RootState) => state.favourites);
-
+  const isFavourite = favourites.some((show) => show.showId === id);
   const [navigationUrl, setNavigationUrl] = useState<string | null>(null);
-
-  const isFavourite = favourites.includes(id);
 
   const toggleWatchList = async () => {
     if (isFavourite) {
@@ -57,7 +55,12 @@ const DisplayCard: React.FC<CardProps> = ({
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
-        dispatch(addFavourite(id));
+        dispatch(
+          addFavourite({
+            showId: id,
+            showType: media_type.toUpperCase() as unknown as ShowType,
+          })
+        );
       } catch (err) {
         console.error(err);
       }

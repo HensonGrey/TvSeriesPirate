@@ -1,5 +1,6 @@
-import { Home, Search, LogOut } from "lucide-react";
+"use client";
 
+import { Home, Search, LogOut, Heart, Tv } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -10,38 +11,58 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { signOut } from "@/auth";
-import { redirect } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { setFavourites } from "@/store/WatchListSlice";
+import { setSignedIn } from "@/store/signedInSlice";
+import { useEffect, useMemo } from "react";
 
-// Menu items.
-const items = [
-  {
-    title: "Home",
-    url: "/",
-    icon: Home,
-  },
-  {
-    title: "Search",
-    url: "/home",
-    icon: Search,
-  },
-  {
-    title: "Watch List",
-    url: "/list",
-    icon: Home,
-  },
-  {
-    title: "Sign out",
-    icon: LogOut,
-    action: async () => {
-      "use server";
-      await signOut();
-      redirect("/");
-    },
-  },
-];
+// Define interface for menu items
+interface MenuItem {
+  title: string;
+  url?: string;
+  icon: typeof Home | typeof Search | typeof LogOut;
+  action?: () => Promise<void>;
+}
 
 export function AppSidebar() {
+  const dispatch = useDispatch();
+  const isSignedIn = useSelector((state: RootState) => state.signedIn);
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session) {
+      dispatch(setSignedIn(true));
+    } else {
+      dispatch(setSignedIn(false));
+    }
+  }, [session, dispatch]);
+
+  // Memoize menu items to avoid unnecessary re-renders
+  const menuItems = useMemo(() => {
+    const items: MenuItem[] = [
+      { title: "Search", url: "/home", icon: Search },
+      { title: "Favourites", url: "/favourites", icon: Heart },
+      { title: "Watching", url: "/currently-watching", icon: Tv },
+    ];
+
+    if (isSignedIn) {
+      items.push({
+        title: "Sign out",
+        icon: LogOut,
+        action: async () => {
+          dispatch(setFavourites([]));
+          dispatch(setSignedIn(false));
+          await signOut();
+        },
+      });
+    }
+
+    return items;
+  }, [isSignedIn, dispatch]);
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -49,24 +70,22 @@ export function AppSidebar() {
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) =>
+              {menuItems.map((item) =>
                 item.url ? (
-                  <SidebarMenuItem key={item.title}>
+                  <SidebarMenuItem key={item.url}>
                     <SidebarMenuButton asChild>
-                      <a href={item.url}>
-                        <item.icon />
+                      <Link href={item.url}>
+                        <item.icon className="w-4 h-4 mr-2" />
                         <span>{item.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ) : (
                   <SidebarMenuItem key={item.title}>
-                    <form action={item.action}>
-                      <SidebarMenuButton type="submit">
-                        <item.icon className="w-4 h-4 mr-2" />
-                        <span>{item.title}</span>
-                      </SidebarMenuButton>
-                    </form>
+                    <SidebarMenuButton onClick={item.action}>
+                      <item.icon className="w-4 h-4 mr-2" />
+                      <span>{item.title}</span>
+                    </SidebarMenuButton>
                   </SidebarMenuItem>
                 )
               )}

@@ -1,4 +1,3 @@
-import { API_KEY } from "@/constants";
 import { Movie } from "@/types/types";
 import { useEffect, useState } from "react";
 
@@ -9,11 +8,13 @@ export const useMovieData = (id: string) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${id}`,
+          `/api/search/details?id=${encodeURIComponent(
+            id
+          )}&mediaType=${encodeURIComponent("movie")}`,
           {
+            method: "GET",
             headers: {
-              accept: "application/json",
-              Authorization: `Bearer ${API_KEY}`,
+              "Content-type": "application/json",
             },
           }
         );
