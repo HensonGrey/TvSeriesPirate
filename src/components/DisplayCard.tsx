@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { CardProps, ShowType } from "@/types/types";
+import { CardProps } from "@/types/types";
 import Link from "next/link";
 import React from "react";
 import NextImageWithFallback from "./NextImageWithFallBack";
@@ -30,7 +30,7 @@ const DisplayCard: React.FC<CardProps> = ({
           },
           body: JSON.stringify({
             showId: id,
-            showType: media_type.toUpperCase() as ShowType,
+            showType: media_type.toUpperCase(),
           }),
         });
         if (!response.ok)
@@ -50,6 +50,8 @@ const DisplayCard: React.FC<CardProps> = ({
           body: JSON.stringify({
             showId: id,
             showType: media_type.toUpperCase(),
+            imagePath: image_path,
+            showTitle: title,
           }),
         });
         if (!response.ok) {
@@ -58,7 +60,9 @@ const DisplayCard: React.FC<CardProps> = ({
         dispatch(
           addFavourite({
             showId: id,
-            showType: media_type.toUpperCase() as unknown as ShowType,
+            showType: media_type.toUpperCase(),
+            imagePath: image_path,
+            showTitle: title,
           })
         );
       } catch (err) {

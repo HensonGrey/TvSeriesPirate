@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { API_KEY } from "@/constants";
 import { Season } from "@/types/types";
 
 export const useTVShowData = (id: string, season: number, episode: number) => {

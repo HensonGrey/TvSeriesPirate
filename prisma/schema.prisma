@@ -7,12 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum ShowType {
-  TV
-  MOVIE
-  ANIME
-}
-
 model User {
   id               String  @id @default(uuid())
   favourites       Favourite[]   
@@ -24,7 +18,9 @@ model Favourite {
   user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String
   showId  Int
-  showType ShowType
+  imagePath String?
+  title   String
+  showType String
   addedAt DateTime @default(now()) // Track when added
 }
 
@@ -33,7 +29,9 @@ model CurrentlyWatching {
   user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String
   showId     Int
-  showType   String //Tv or Movie, maybe anime too if tmdb returns that
+  imagePath String?
+  title   String
+  showType   String
   seasonNum  Int?  //nullable in case its a movie, 
   episodeNum Int?  //i dont know why you would drop a movie in the middle and still want it saved but you do you
 }

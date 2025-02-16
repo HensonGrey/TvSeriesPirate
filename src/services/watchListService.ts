@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
-import { ShowType } from "@/types/types";
 
 export async function getCurrentUser() {
   try {
@@ -32,8 +31,10 @@ export async function getCurrentUser() {
 
 async function updateFavourites(
   showId: number,
-  showType: ShowType,
-  action: "add" | "remove"
+  showType: string,
+  action: "add" | "remove",
+  imagePath?: string,
+  showTitle?: string
 ) {
   try {
     const { user, status, message } = await getCurrentUser();
@@ -45,6 +46,8 @@ async function updateFavourites(
           userId: user.id,
           showId,
           showType,
+          imagePath,
+          title: showTitle,
         },
       });
 
@@ -75,10 +78,15 @@ async function updateFavourites(
   }
 }
 
-export async function addToFavourites(id: number, showType: ShowType) {
-  return updateFavourites(id, showType, "add");
+export async function addToFavourites(
+  id: number,
+  showType: string,
+  imagePath: string,
+  showTitle: string
+) {
+  return updateFavourites(id, showType, "add", imagePath, showTitle);
 }
 
-export async function removeFromFavourites(id: number, showType: ShowType) {
+export async function removeFromFavourites(id: number, showType: string) {
   return updateFavourites(id, showType, "remove");
 }

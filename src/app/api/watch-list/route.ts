@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { showId, showType } = body;
+    const { showId, showType, imagePath, showTitle } = body;
 
     if (!showId) {
       return NextResponse.json(
@@ -45,7 +45,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { status, message } = await addToFavourites(showId, showType);
+    const { status, message } = await addToFavourites(
+      showId,
+      showType,
+      imagePath,
+      showTitle
+    );
     return NextResponse.json({ message }, { status });
   } catch (error) {
     console.error(error);

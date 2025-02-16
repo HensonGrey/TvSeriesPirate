@@ -1,9 +1,10 @@
-import { ShowType } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ShowProps {
   showId: number;
-  showType: ShowType;
+  showType: string;
+  imagePath: string | null;
+  showTitle: string;
 }
 
 const initialState: ShowProps[] = [];
@@ -15,10 +16,7 @@ const WatchListSlice = createSlice({
     setFavourites: (state, action: PayloadAction<ShowProps[]>) => {
       return action.payload;
     },
-    addFavourite: (
-      state,
-      action: PayloadAction<{ showId: number; showType: ShowType }>
-    ) => {
+    addFavourite: (state, action: PayloadAction<ShowProps>) => {
       state.push(action.payload);
     },
     removeFavourite: (state, action: PayloadAction<number>) => {

@@ -27,9 +27,3 @@ export type ProviderProps = {
   url: string;
   button_title: string;
 };
-
-export enum ShowType {
-  TV = "TV",
-  MOVIE = "MOVIE",
-  ANIME = "ANIME",
-}
