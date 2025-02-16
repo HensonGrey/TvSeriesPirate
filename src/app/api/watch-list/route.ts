@@ -5,7 +5,7 @@ import {
 } from "@/services/watchListService";
 import { NextRequest, NextResponse } from "next/server";
 
-//returns user's favourites / watch list
+//returns user's favourites
 export async function GET(req: NextRequest) {
   try {
     const { user, status, message } = await getCurrentUser();
@@ -15,13 +15,19 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message }, { status });
     }
 
-    // If user is found, return the user's watch_list and message
-    return NextResponse.json({ data: user.watch_list, message }, { status });
+    const favourites = await prisma.favourite.findMany({
+      where: {
+        userId: user.id,
+      },
+    });
+
+    // If user is found, return the user's favourites and message
+    return NextResponse.json({ data: favourites, message }, { status });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 } // Ensure 500 status is returned as part of the HTTP response header
+      { status: 500 }
     );
   }
 }
@@ -30,16 +36,16 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { id } = body;
+    const { showId, showType } = body;
 
-    if (!id) {
+    if (!showId) {
       return NextResponse.json(
         { error: "Show ID is required" },
         { status: 400 }
       );
     }
 
-    const { status, message } = await addToFavourites(id);
+    const { status, message } = await addToFavourites(showId, showType);
     return NextResponse.json({ message }, { status });
   } catch (error) {
     console.error(error);
@@ -51,19 +57,19 @@ export async function POST(req: NextRequest) {
 }
 
 //removing a show from favourites
-export async function PUT(req: NextRequest, res: NextResponse) {
+export async function DELETE(req: NextRequest, res: NextResponse) {
   try {
     const body = await req.json();
-    const { id } = body;
+    const { showId, showType } = body;
 
-    if (!id) {
+    if (!showId) {
       return NextResponse.json(
         { error: "Show ID is required" },
         { status: 400 }
       );
     }
 
-    const { status, message } = await removeFromFavourites(id);
+    const { status, message } = await removeFromFavourites(showId, showType);
     return NextResponse.json({ message }, { status });
   } catch (error) {
     console.error(error);

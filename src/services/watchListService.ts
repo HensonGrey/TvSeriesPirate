@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
+import { ShowType } from "@/types/types";
 
 export async function getCurrentUser() {
   try {
@@ -22,37 +23,62 @@ export async function getCurrentUser() {
       };
     }
 
-    return { user: db_user, status: 200, message: "No problems occured!" };
+    return { user: db_user, status: 200, message: "No problems occurred!" };
   } catch (error) {
     console.error(error);
     return { user: null, status: 500, message: "Internal server error" };
   }
 }
 
-async function updateFavourites(id: string, action: "add" | "remove") {
-  const { user, status, message } = await getCurrentUser();
-  if (user == null) return { status, message };
+async function updateFavourites(
+  showId: number,
+  showType: ShowType,
+  action: "add" | "remove"
+) {
+  try {
+    const { user, status, message } = await getCurrentUser();
+    if (!user) return { status, message };
 
-  const updated_watch_list =
-    action === "add"
-      ? [...user.watch_list, parseInt(id)]
-      : user.watch_list.filter((show_id: number) => show_id !== parseInt(id));
+    if (action === "add") {
+      await prisma.favourite.create({
+        data: {
+          userId: user.id,
+          showId,
+          showType,
+        },
+      });
 
-  await prisma.user.update({
-    where: { id: user.id },
-    data: { watch_list: updated_watch_list },
-  });
+      return {
+        status: 200,
+        message: "Show successfully added!",
+      };
+    } else {
+      await prisma.favourite.deleteMany({
+        where: {
+          userId: user.id,
+          showId: showId,
+          showType: showType,
+        },
+      });
 
-  return {
-    status: 200,
-    message: `Show successfully ${action === "add" ? "added" : "removed"}!`,
-  };
+      return {
+        status: 200,
+        message: "Show successfully removed!",
+      };
+    }
+  } catch (error) {
+    console.error("Error in updateFavourites:", error);
+    return {
+      status: 500,
+      message: "Failed to update favourites",
+    };
+  }
 }
 
-export async function addToFavourites(id: string) {
-  return updateFavourites(id, "add");
+export async function addToFavourites(id: number, showType: ShowType) {
+  return updateFavourites(id, showType, "add");
 }
 
-export async function removeFromFavourites(id: string) {
-  return updateFavourites(id, "remove");
+export async function removeFromFavourites(id: number, showType: ShowType) {
+  return updateFavourites(id, showType, "remove");
 }

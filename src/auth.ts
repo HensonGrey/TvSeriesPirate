@@ -18,7 +18,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           where: { id: profile.sub },
           create: {
             id: profile.sub,
-            watch_list: [],
+            favourites: {
+              create: [],
+            },
+            currentlyWatching: {
+              create: [],
+            },
           },
           update: {},
         });

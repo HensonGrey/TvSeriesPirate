@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { CardProps } from "@/types/types";
+import { CardProps, ShowType } from "@/types/types";
 import Link from "next/link";
 import React from "react";
 import NextImageWithFallback from "./NextImageWithFallBack";
@@ -26,13 +26,17 @@ const DisplayCard: React.FC<CardProps> = ({
     if (isFavourite) {
       try {
         const response = await fetch("/api/watch-list", {
-          method: "PUT",
+          method: "DELETE",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ id }),
+          body: JSON.stringify({
+            showId: id,
+            showType: media_type.toUpperCase() as ShowType,
+          }),
         });
-        if (!response.ok) throw new Error("Failed executing the put request!");
+        if (!response.ok)
+          throw new Error("Failed executing the delete request!");
 
         dispatch(removeFavourite(id));
       } catch (error) {
@@ -45,7 +49,10 @@ const DisplayCard: React.FC<CardProps> = ({
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ id }),
+          body: JSON.stringify({
+            showId: id,
+            showType: media_type.toUpperCase(),
+          }),
         });
         if (!response.ok) {
           throw new Error("Failed to fetch data");

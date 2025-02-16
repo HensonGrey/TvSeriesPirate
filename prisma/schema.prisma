@@ -7,7 +7,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-    id String @id @default(uuid())
-    watch_list Int[] //ids 
+enum ShowType {
+  TV
+  MOVIE
+  ANIME
+}
+
+model User {
+  id               String  @id @default(uuid())
+  favourites       Favourite[]   
+  currentlyWatching CurrentlyWatching[]
+}
+
+model Favourite {
+  id      String @id @default(uuid())
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
+  showId  Int
+  showType ShowType
+  addedAt DateTime @default(now()) // Track when added
+}
+
+model CurrentlyWatching {
+  id         String @id @default(uuid()) // Unique identifier
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  showId     Int
+  showType   String //Tv or Movie, maybe anime too if tmdb returns that
+  seasonNum  Int?  //nullable in case its a movie, 
+  episodeNum Int?  //i dont know why you would drop a movie in the middle and still want it saved but you do you
 }
