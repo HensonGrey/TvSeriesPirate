@@ -1,5 +1,5 @@
 "use client";
-import DisplayCard from "@/components/DisplayCard";
+import { FavouriteCard } from "@/components/FavouriteCard";
 import { RootState } from "@/store/store";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +13,7 @@ export default function Favourites() {
       <h1 className="text-3xl text-white text-center">Browsing favourites</h1>
       <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4 p-8">
         {favourites.map((fav) => (
-          <DisplayCard
+          <FavouriteCard
             key={fav.showId}
             image_path={fav.imagePath}
             title={fav.showTitle}

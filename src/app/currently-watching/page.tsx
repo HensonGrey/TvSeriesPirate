@@ -1,5 +1,5 @@
 "use client";
-import DisplayCard from "@/components/DisplayCard";
+import { WatchingCard } from "@/components/WatchingCard";
 import { RootState } from "@/store/store";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,7 +15,7 @@ export default function CurrentlyWatching() {
       <h1 className="text-3xl text-white text-center">Currently watching:</h1>
       <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4 p-8">
         {currentlyWatching.map((cw) => (
-          <DisplayCard
+          <WatchingCard
             key={cw.showId}
             image_path={cw.imagePath}
             title={cw.showTitle}
@@ -23,6 +23,8 @@ export default function CurrentlyWatching() {
             media_type={
               cw.showType.toString().toLowerCase() === "tv" ? "tv" : "movie"
             }
+            seasonNum={cw.seasonNum ? cw.seasonNum : undefined}
+            episodeNum={cw.episodeNum ? cw.episodeNum : undefined}
           />
         ))}
       </div>

@@ -1,6 +1,7 @@
 import { MediaType } from "@/types/search";
 import DisplayCard from "./DisplayCard";
 import { useEffect } from "react";
+import { FavouriteCard } from "./FavouriteCard";
 
 interface ResultsGridProps {
   isLoading: boolean;
@@ -37,7 +38,7 @@ export const ResultsGrid = ({
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
       {results.map((result) => (
-        <DisplayCard
+        <FavouriteCard
           key={result.id}
           image_path={result.poster_path}
           title={mediaType === "movie" ? result.title : result.name}

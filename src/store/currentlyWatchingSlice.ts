@@ -36,7 +36,9 @@ const CurrentlyWatchingSlice = createSlice({
       const { showId, showType, seasonNum, episodeNum } = action.payload;
 
       const elementToUpdateIndex = state.findIndex(
-        (el) => el.showId === showId && el.showType === showType
+        (el) =>
+          el.showId === showId &&
+          el.showType.toLowerCase() === showType.toLowerCase()
       );
       if (elementToUpdateIndex === -1)
         throw new Error("Element could not be found!");
@@ -48,8 +50,15 @@ const CurrentlyWatchingSlice = createSlice({
       };
     },
 
-    removeFromWatching: (state, action: PayloadAction<number>) => {
-      return state.filter((show) => show.showId !== action.payload);
+    removeFromWatching: (
+      state,
+      action: PayloadAction<{ showId: number; showType: string }>
+    ) => {
+      const { showId, showType } = action.payload;
+
+      return state.filter(
+        (show) => show.showId !== showId && show.showType !== showType
+      );
     },
   },
 });

@@ -1,15 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { CardProps } from "@/types/types";
-import Link from "next/link";
 import React from "react";
 import NextImageWithFallback from "./NextImageWithFallBack";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { Button } from "./ui/button";
-import { Heart } from "lucide-react";
-import { addFavourite, removeFavourite } from "@/store/WatchListSlice";
 import { useRouter } from "next/navigation";
 import { addToWatching } from "@/store/currentlyWatchingSlice";
+import { RootState } from "@/store/store";
 
 const DisplayCard: React.FC<CardProps> = ({
   image_path,
@@ -18,60 +14,11 @@ const DisplayCard: React.FC<CardProps> = ({
   media_type,
 }) => {
   const dispatch = useDispatch();
+  const currentlyWatching = useSelector(
+    (state: RootState) => state.currentlyWatching
+  );
   const router = useRouter();
-  const favourites = useSelector((state: RootState) => state.favourites);
-  const isFavourite = favourites.some((show) => show.showId === id);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const toggleWatchList = async () => {
-    if (isFavourite) {
-      try {
-        const response = await fetch("/api/watch-list", {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            showId: id,
-            showType: media_type.toUpperCase(),
-          }),
-        });
-        if (!response.ok)
-          throw new Error("Failed executing the delete request!");
-
-        dispatch(removeFavourite(id));
-      } catch (error) {
-        console.error(error);
-      }
-    } else
-      try {
-        const response = await fetch("/api/watch-list", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            showId: id,
-            showType: media_type.toUpperCase(),
-            imagePath: image_path,
-            showTitle: title,
-          }),
-        });
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        dispatch(
-          addFavourite({
-            showId: id,
-            showType: media_type.toUpperCase(),
-            imagePath: image_path,
-            showTitle: title,
-          })
-        );
-      } catch (err) {
-        console.error(err);
-      }
-  };
 
   const handleClick = async () => {
     try {
@@ -100,14 +47,20 @@ const DisplayCard: React.FC<CardProps> = ({
         if (!response.ok)
           throw new Error("Error fetching user current tv progress");
 
-        dispatch(
-          addToWatching({
-            showId: id,
-            showTitle: title,
-            showType: "MOVIE",
-            imagePath: image_path,
-          })
-        );
+        if (
+          !currentlyWatching.some(
+            (show) =>
+              show.showId == id && show.showType.toLowerCase() == media_type
+          )
+        )
+          dispatch(
+            addToWatching({
+              showId: id,
+              showTitle: title,
+              showType: "MOVIE",
+              imagePath: image_path,
+            })
+          );
 
         navigationUrl = `/watching/movie/${id}?title=${title}`;
       } else {
@@ -128,6 +81,22 @@ const DisplayCard: React.FC<CardProps> = ({
           throw new Error("Error fetching user current tv progress");
 
         const { seasonNum, episodeNum } = await response.json();
+        if (
+          !currentlyWatching.some(
+            (show) =>
+              show.showId == id && show.showType.toLowerCase() == media_type
+          )
+        )
+          dispatch(
+            addToWatching({
+              showId: id,
+              showTitle: title,
+              showType: "TV",
+              imagePath: image_path,
+              seasonNum,
+              episodeNum,
+            })
+          );
         navigationUrl = `/watching/tv/${id}?title=${title}&season=${seasonNum}&episode=${episodeNum}`;
       }
       router.push(navigationUrl);
@@ -145,16 +114,6 @@ const DisplayCard: React.FC<CardProps> = ({
 
   return (
     <div className="relative flex flex-col group">
-      <Button
-        variant="destructive"
-        className="absolute w-full top-0 z-10 px-4 opacity-0 group-hover:opacity-100 bg-[rgba(255,0,0,0.5)] hover:bg-[rgba(255,0,0,0.7)] transition-opacity p-4 lg:pd-8"
-        onClick={toggleWatchList}
-      >
-        <Heart
-          className={`${isFavourite ? "text-black" : "text-white"} scale-110`}
-          fill={"currentColor"}
-        />
-      </Button>
       <a className="block cursor-pointer" onClick={handleClick}>
         <NextImageWithFallback
           src={
