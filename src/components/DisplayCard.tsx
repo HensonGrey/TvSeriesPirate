@@ -8,6 +8,7 @@ import { RootState } from "@/store/store";
 import { Button } from "./ui/button";
 import { Heart } from "lucide-react";
 import { addFavourite, removeFavourite } from "@/store/WatchListSlice";
+import { useRouter } from "next/navigation";
 
 const DisplayCard: React.FC<CardProps> = ({
   image_path,
@@ -16,9 +17,10 @@ const DisplayCard: React.FC<CardProps> = ({
   media_type,
 }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const favourites = useSelector((state: RootState) => state.favourites);
   const isFavourite = favourites.some((show) => show.showId === id);
-  const [navigationUrl, setNavigationUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const toggleWatchList = async () => {
     if (isFavourite) {
@@ -70,21 +72,50 @@ const DisplayCard: React.FC<CardProps> = ({
       }
   };
 
-  useEffect(() => {
-    const getNavigationUrl = () => {
+  const handleClick = async () => {
+    try {
+      //dynamically set navigation url
+      let navigationUrl;
+      setIsLoading(true);
+
       if (media_type === "movie") {
-        setNavigationUrl(`/watching/movie/${id}?title=${title}`);
+        navigationUrl = `/watching/movie/${id}?title=${title}`;
       } else {
-        setNavigationUrl(
-          `/watching/tv/${id}?title=${title}&season=1&episode=1`
+        if (!id || !media_type || !title || !image_path) {
+          console.error("missing props");
+          return;
+        }
+        const response = await fetch(
+          `/api/currently-watching/details/tv?showId=${encodeURIComponent(
+            id
+          )}&showType=${encodeURIComponent(
+            media_type.toUpperCase()
+          )}&showTitle=${encodeURIComponent(
+            title
+          )}&imagePath=${encodeURIComponent(image_path)}`,
+          {
+            method: "GET",
+          }
         );
+
+        if (!response.ok)
+          throw new Error("Error fetching user current tv progress");
+
+        const { seasonNum, episodeNum } = await response.json();
+        navigationUrl = `/watching/tv/${id}?title=${title}&season=${seasonNum}&episode=${episodeNum}`;
       }
-    };
+      router.push(navigationUrl);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    getNavigationUrl();
-  }, [id, media_type, title]);
-
-  if (!navigationUrl) return <div>Loading...</div>; // Optionally, show a loading state
+  if (isLoading)
+    return (
+      <div className="w-12 h-12 border-4 border-t-transparent border-blue-500 border-solid rounded-full animate-spin"></div>
+    );
 
   return (
     <div className="relative flex flex-col group">
@@ -98,7 +129,7 @@ const DisplayCard: React.FC<CardProps> = ({
           fill={"currentColor"}
         />
       </Button>
-      <Link href={navigationUrl} className="block">
+      <a className="block cursor-pointer" onClick={handleClick}>
         <NextImageWithFallback
           src={
             image_path ? `https://image.tmdb.org/t/p/w500/${image_path}` : null
@@ -111,7 +142,7 @@ const DisplayCard: React.FC<CardProps> = ({
         <h3 className="absolute bottom-0 left-0 right-0 bg-black/85 text-white text-sm text-center p-2 truncate">
           {title}
         </h3>
-      </Link>
+      </a>
     </div>
   );
 };

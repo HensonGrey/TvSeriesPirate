@@ -5,8 +5,8 @@ import { ResultsGrid } from "@/components/ResultsGrid";
 import { SearchBar } from "@/components/SearchBar";
 import { MediaType } from "@/types/search";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
-import { useSearch } from "../../../../hooks/useSearch";
+import { useEffect, useState } from "react";
+import { useSearch } from "../../../hooks/useSearch";
 
 export default function SearchPage() {
   const { query } = useParams();

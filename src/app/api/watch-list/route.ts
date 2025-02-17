@@ -6,7 +6,7 @@ import {
 import { NextRequest, NextResponse } from "next/server";
 
 //returns user's favourites
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const { user, status, message } = await getCurrentUser();
 

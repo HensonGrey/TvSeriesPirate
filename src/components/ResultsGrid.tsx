@@ -1,5 +1,6 @@
 import { MediaType } from "@/types/search";
 import DisplayCard from "./DisplayCard";
+import { useEffect } from "react";
 
 interface ResultsGridProps {
   isLoading: boolean;

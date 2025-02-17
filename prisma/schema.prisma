@@ -19,7 +19,7 @@ model Favourite {
   userId  String
   showId  Int
   imagePath String?
-  title   String
+  showTitle   String
   showType String
   addedAt DateTime @default(now()) // Track when added
 }
@@ -30,7 +30,7 @@ model CurrentlyWatching {
   userId     String
   showId     Int
   imagePath String?
-  title   String
+  showTitle   String
   showType   String
   seasonNum  Int?  //nullable in case its a movie, 
   episodeNum Int?  //i dont know why you would drop a movie in the middle and still want it saved but you do you

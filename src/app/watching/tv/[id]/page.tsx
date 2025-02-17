@@ -1,26 +1,31 @@
 "use client";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Season, VideoPlayerState } from "@/types/types";
 import { EpisodeGrid } from "@/components/EpisodeGrid";
 import { SeasonSelector } from "@/components/SeasonSelector";
 import { VideoPlayer } from "@/components/VideoPlayer";
-import { useTVShowData } from "../../../../../hooks/useTvData";
+import { useTVShowData } from "../../../../hooks/useTvData";
 import Image from "next/image";
 import WebsiteLogo from "@/../public/images/pirate.png";
 import Link from "next/link";
 import NextImageWithFallback from "@/components/NextImageWithFallBack";
 import { providers } from "@/constants";
 import { VideoProviderList } from "@/components/VideoProviderList";
+import { useDispatch } from "react-redux";
+import { updateCurrentlyWatching } from "@/store/currentlyWatchingSlice";
 
 const TVShowPage = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { id } = useParams();
 
   const title = searchParams.get("title");
-  const season = parseInt(searchParams.get("season") || "1");
-  const episode = parseInt(searchParams.get("episode") || "1");
+  const season = parseInt(searchParams.get("season")!); //asserting that they are not null
+  const episode = parseInt(searchParams.get("episode")!);
+
+  const [provider_index, setProviderIndex] = useState<number>(0);
 
   const {
     seasons,
@@ -34,8 +39,6 @@ const TVShowPage = () => {
     error: null,
     isPlaying: false,
   });
-
-  const [provider_index, setProviderIndex] = useState<number>(0);
 
   const updateRoute = (newSeason: number, newEpisode: number) => {
     const currentParams = new URLSearchParams(searchParams.toString());
@@ -55,6 +58,42 @@ const TVShowPage = () => {
   const handleProviderChange = (newIndex: number) => {
     setProviderIndex(newIndex);
   };
+
+  //when user changes season or episode or first enters this page
+  //this block of code will trigger
+  //which will save season and episode numbers in the database
+  //and in redux
+  useEffect(() => {
+    const saveShowData = async () => {
+      try {
+        const response = await fetch("/api/currently-watching/details/tv", {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({
+            showId: id,
+            showType: "TV",
+            seasonNum: season,
+            episodeNum: episode,
+          }),
+        });
+        if (!response.ok) throw new Error("Error fetching user data!");
+        if (id)
+          dispatch(
+            updateCurrentlyWatching({
+              showId: parseInt(id.toString()),
+              showType: "TV",
+              seasonNum: season,
+              episodeNum: episode,
+            })
+          );
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    saveShowData();
+  }, [season, episode]);
 
   return (
     <div className="p-4">

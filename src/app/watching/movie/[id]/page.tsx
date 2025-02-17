@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import WebsiteLogo from "@/../public/images/pirate.png";
 import { useSearchParams, useParams } from "next/navigation";
-import { useMovieData } from "../../../../../hooks/useMovieData";
+import { useMovieData } from "../../../../hooks/useMovieData";
 import { VideoPlayerState } from "@/types/types";
 import { useState, useEffect } from "react";
 import { VideoPlayer } from "@/components/VideoPlayer";

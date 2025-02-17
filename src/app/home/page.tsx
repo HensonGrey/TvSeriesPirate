@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setFavourites } from "@/store/WatchListSlice";
+import { setCurrentlyWatchingList } from "@/store/currentlyWatchingSlice";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -52,9 +53,6 @@ export default function Home() {
       try {
         const response = await fetch("/api/watch-list", {
           method: "GET",
-          headers: {
-            "Content-type": "application/json",
-          },
         });
 
         if (!response.ok) throw new Error("Error fetching user data!");
@@ -65,7 +63,22 @@ export default function Home() {
         console.error(error);
       }
     };
+    const fetchUserCurrentlyWatching = async () => {
+      try {
+        const response = await fetch("/api/currently-watching/details", {
+          method: "GET",
+        });
+
+        if (!response.ok) throw new Error("Error fetching user data!");
+
+        const { data } = await response.json();
+        dispatch(setCurrentlyWatchingList(data));
+      } catch (error) {
+        console.error(error);
+      }
+    };
     fetchUserFavourites();
+    fetchUserCurrentlyWatching();
   }, []);
 
   return (

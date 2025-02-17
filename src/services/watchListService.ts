@@ -47,7 +47,7 @@ async function updateFavourites(
           showId,
           showType,
           imagePath,
-          title: showTitle,
+          showTitle,
         },
       });
 
@@ -59,8 +59,8 @@ async function updateFavourites(
       await prisma.favourite.deleteMany({
         where: {
           userId: user.id,
-          showId: showId,
-          showType: showType,
+          showId,
+          showType,
         },
       });
 
