@@ -12,7 +12,7 @@ export default function CurrentlyWatching() {
 
   return (
     <div className="flex flex-col">
-      <h1 className="text-3xl text-white text-center">Browsing favourites</h1>
+      <h1 className="text-3xl text-white text-center">Currently watching:</h1>
       <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4 p-8">
         {currentlyWatching.map((cw) => (
           <DisplayCard

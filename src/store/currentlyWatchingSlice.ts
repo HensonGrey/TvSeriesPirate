@@ -5,8 +5,8 @@ interface CurrentlyWatching {
   showTitle: string;
   showType: string;
   imagePath: string;
-  seasonNum: number;
-  episodeNum: number;
+  seasonNum?: number;
+  episodeNum?: number;
 }
 
 const initialState: CurrentlyWatching[] = [];

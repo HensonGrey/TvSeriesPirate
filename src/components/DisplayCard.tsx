@@ -9,6 +9,7 @@ import { Button } from "./ui/button";
 import { Heart } from "lucide-react";
 import { addFavourite, removeFavourite } from "@/store/WatchListSlice";
 import { useRouter } from "next/navigation";
+import { addToWatching } from "@/store/currentlyWatchingSlice";
 
 const DisplayCard: React.FC<CardProps> = ({
   image_path,
@@ -74,17 +75,42 @@ const DisplayCard: React.FC<CardProps> = ({
 
   const handleClick = async () => {
     try {
+      if (!id || !media_type || !title || !image_path) {
+        console.error("missing props");
+        return;
+      }
       //dynamically set navigation url
       let navigationUrl;
       setIsLoading(true);
 
       if (media_type === "movie") {
+        const response = await fetch(`/api/currently-watching/details/movie`, {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({
+            showId: id,
+            showType: media_type.toUpperCase(),
+            showTitle: title,
+            imagePath: image_path,
+          }),
+        });
+
+        if (!response.ok)
+          throw new Error("Error fetching user current tv progress");
+
+        dispatch(
+          addToWatching({
+            showId: id,
+            showTitle: title,
+            showType: "MOVIE",
+            imagePath: image_path,
+          })
+        );
+
         navigationUrl = `/watching/movie/${id}?title=${title}`;
       } else {
-        if (!id || !media_type || !title || !image_path) {
-          console.error("missing props");
-          return;
-        }
         const response = await fetch(
           `/api/currently-watching/details/tv?showId=${encodeURIComponent(
             id
