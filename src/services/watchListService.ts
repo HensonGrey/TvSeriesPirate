@@ -33,8 +33,8 @@ async function updateFavourites(
   showId: number,
   showType: string,
   action: "add" | "remove",
-  imagePath?: string,
-  showTitle?: string
+  imagePath: string = "",
+  showTitle: string = ""
 ) {
   try {
     const { user, status, message } = await getCurrentUser();
