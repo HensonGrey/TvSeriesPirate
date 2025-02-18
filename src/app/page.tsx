@@ -17,11 +17,3 @@ export default function Page() {
     </div>
   );
 }
-
-export const getStaticProps = async () => {
-  console.log("DATABASE_URL:", process.env.DATABASE_URL);
-
-  return {
-    props: {},
-  };
-};
