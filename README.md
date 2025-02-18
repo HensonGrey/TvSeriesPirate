@@ -1,1 +1,4 @@
-A pirate website for tv shows and movies. Nothing really new but has no ads (besides the one enforced by the video providers on video start). Simple design, and good quality videos, they dont lag a lot, are high quliaty and the subtitles are in synch!
+A pirate website for tv shows and movies.
+Has a way to sign in/out with google.
+Saves information about current episode/season.
+Allows users to heart shows so as to to easily find them / basically a to watch list

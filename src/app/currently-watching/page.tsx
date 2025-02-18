@@ -2,10 +2,9 @@
 import { WatchingCard } from "@/components/WatchingCard";
 import { RootState } from "@/store/store";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 export default function CurrentlyWatching() {
-  const dispatch = useDispatch();
   const currentlyWatching = useSelector(
     (state: RootState) => state.currentlyWatching
   );
