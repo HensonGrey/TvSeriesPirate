@@ -54,7 +54,7 @@ export const WatchingCard = ({
         <Button
           variant="outline"
           size="icon"
-          className="absolute right-2 top-2 z-20 opacity-0 group-hover:opacity-100 sm:opacity-100 sm:static bg-red-500 hover:bg-red-600 transition-opacity p-2"
+          className="absolute right-2 top-2 z-20 opacity-0 group-hover:opacity-100 bg-red-500 hover:bg-red-600 transition-opacity p-2"
           onClick={() => onRemove()}
         >
           <Minus size={20} />
