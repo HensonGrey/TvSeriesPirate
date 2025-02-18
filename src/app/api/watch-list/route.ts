@@ -4,6 +4,7 @@ import {
   removeFromFavourites,
 } from "@/services/watchListService";
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 //returns user's favourites
 export async function GET() {

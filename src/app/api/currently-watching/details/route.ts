@@ -1,5 +1,6 @@
 import { getCurrentUser } from "@/services/watchListService";
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 //returns user's currentlyWatching list
 export async function GET() {

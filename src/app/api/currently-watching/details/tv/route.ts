@@ -1,5 +1,6 @@
 import { getCurrentUser } from "@/services/watchListService";
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 //checks if user is currently watching this tv show
 //if no, create a new record in the database
