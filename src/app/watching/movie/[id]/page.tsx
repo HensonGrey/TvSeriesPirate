@@ -1,7 +1,4 @@
 "use client";
-import Link from "next/link";
-import Image from "next/image";
-import WebsiteLogo from "@/../public/images/pirate.png";
 import { useSearchParams, useParams } from "next/navigation";
 import { useMovieData } from "../../../../hooks/useMovieData";
 import { VideoPlayerState } from "@/types/types";
@@ -10,6 +7,7 @@ import { VideoPlayer } from "@/components/VideoPlayer";
 import NextImageWithFallback from "@/components/NextImageWithFallBack";
 import { providers } from "@/constants";
 import { VideoProviderList } from "@/components/VideoProviderList";
+import HeartComponent from "@/components/HeartComponent";
 
 const MovieScreen = () => {
   const searchParams = useSearchParams();
@@ -29,6 +27,12 @@ const MovieScreen = () => {
     setProviderIndex(newIndex);
   };
 
+  const getImagePath = (): string => {
+    return movie?.poster_path
+      ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
+      : `https://placehold.co/800x1200?text=NOT+FOUND`;
+  };
+
   useEffect(() => {
     setPlayerState({
       isLoading: false,
@@ -40,15 +44,15 @@ const MovieScreen = () => {
   return (
     <div className="p-4">
       <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col items-center justify-center gap-4 md:gap-6 text-white mb-6">
-          <Link href="/home">
-            <Image
-              src={WebsiteLogo}
-              alt="website logo"
-              className="w-20 h-18 hover:opacity-50"
-            />
-          </Link>
+        <div className="flex items-center justify-center gap-4 md:gap-6 text-white mb-6">
           <h1 className="text-2xl font-semibold">{title}</h1>
+          <HeartComponent
+            id={parseInt(id as string)}
+            media_type={"tv"}
+            title={title as string}
+            className={""}
+            image_path={getImagePath()}
+          />
         </div>
 
         <div className="space-y-6">
@@ -91,11 +95,7 @@ const MovieScreen = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="md:col-span-1 flex justify-center items-start">
                 <NextImageWithFallback
-                  src={
-                    movie?.poster_path
-                      ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
-                      : `https://placehold.co/800x1200?text=NOT+FOUND`
-                  }
+                  src={getImagePath()}
                   alt={`${title} Poster`}
                   width={800}
                   height={1200}

@@ -1,6 +1,4 @@
 import { MediaType } from "@/types/search";
-import DisplayCard from "./DisplayCard";
-import { useEffect } from "react";
 import { FavouriteCard } from "./FavouriteCard";
 
 interface ResultsGridProps {

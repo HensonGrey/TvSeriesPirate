@@ -10,6 +10,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
@@ -31,6 +32,7 @@ export function AppSidebar() {
   const dispatch = useDispatch();
   const isSignedIn = useSelector((state: RootState) => state.signedIn);
   const { data: session } = useSession();
+  const { setOpenMobile } = useSidebar();
 
   useEffect(() => {
     if (session) {
@@ -55,13 +57,14 @@ export function AppSidebar() {
         action: async () => {
           dispatch(setFavourites([]));
           dispatch(setSignedIn(false));
+          setOpenMobile(false);
           await signOut();
         },
       });
     }
 
     return items;
-  }, [isSignedIn, dispatch]);
+  }, [isSignedIn, dispatch, setOpenMobile]);
 
   return (
     <Sidebar>
@@ -73,8 +76,11 @@ export function AppSidebar() {
               {menuItems.map((item) =>
                 item.url ? (
                   <SidebarMenuItem key={item.url}>
-                    <SidebarMenuButton asChild>
-                      <Link href={item.url}>
+                    <SidebarMenuButton tooltip={item.title} asChild>
+                      <Link
+                        href={item.url}
+                        onClick={() => setOpenMobile(false)}
+                      >
                         <item.icon className="w-4 h-4 mr-2" />
                         <span>{item.title}</span>
                       </Link>
@@ -82,7 +88,10 @@ export function AppSidebar() {
                   </SidebarMenuItem>
                 ) : (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton onClick={item.action}>
+                    <SidebarMenuButton
+                      tooltip={item.title}
+                      onClick={item.action}
+                    >
                       <item.icon className="w-4 h-4 mr-2" />
                       <span>{item.title}</span>
                     </SidebarMenuButton>

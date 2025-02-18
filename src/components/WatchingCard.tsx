@@ -68,8 +68,6 @@ export const WatchingCard = ({
       </div>
       {seasonNum && episodeNum && (
         <div className="grid grid-cols-2 w-full">
-          {" "}
-          {/* Changed to grid */}
           <Button variant="secondary" className="rounded-r-none">
             S{seasonNum}
           </Button>

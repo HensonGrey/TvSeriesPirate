@@ -5,7 +5,7 @@ import { ResultsGrid } from "@/components/ResultsGrid";
 import { SearchBar } from "@/components/SearchBar";
 import { MediaType } from "@/types/search";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSearch } from "../../../hooks/useSearch";
 
 export default function SearchPage() {
@@ -46,6 +46,13 @@ export default function SearchPage() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
+
+  if (isLoading)
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <div className="w-12 h-12 border-4 border-t-transparent border-blue-500 border-solid rounded-full animate-spin"></div>
+      </div>
+    );
 
   return (
     <div>

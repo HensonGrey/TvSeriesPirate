@@ -6,14 +6,12 @@ import { EpisodeGrid } from "@/components/EpisodeGrid";
 import { SeasonSelector } from "@/components/SeasonSelector";
 import { VideoPlayer } from "@/components/VideoPlayer";
 import { useTVShowData } from "../../../../hooks/useTvData";
-import Image from "next/image";
-import WebsiteLogo from "@/../public/images/pirate.png";
-import Link from "next/link";
 import NextImageWithFallback from "@/components/NextImageWithFallBack";
 import { providers } from "@/constants";
 import { VideoProviderList } from "@/components/VideoProviderList";
 import { useDispatch } from "react-redux";
 import { updateCurrentlyWatching } from "@/store/currentlyWatchingSlice";
+import HeartComponent from "@/components/HeartComponent";
 
 const TVShowPage = () => {
   const dispatch = useDispatch();
@@ -59,6 +57,14 @@ const TVShowPage = () => {
     setProviderIndex(newIndex);
   };
 
+  const getImagePath = (): string => {
+    return seasons.find((s: Season) => s.season_number === season)?.poster_path
+      ? `https://image.tmdb.org/t/p/w500/${
+          seasons.find((s: Season) => s.season_number === season)?.poster_path
+        }`
+      : `https://placehold.co/800x1200?text=NOT+FOUND`;
+  };
+
   //when user changes season or episode or first enters this page
   //this block of code will trigger
   //which will save season and episode numbers in the database
@@ -98,17 +104,17 @@ const TVShowPage = () => {
   return (
     <div className="p-4">
       <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col items-center justify-center gap-4 md:gap-6 text-white mb-6">
-          <Link href="/home">
-            <Image
-              src={WebsiteLogo}
-              alt="website logo"
-              className="w-20 h-18 hover:opacity-50"
-            />
-          </Link>
+        <div className="flex items-center justify-center gap-4 md:gap-6 text-white mb-6">
           <h1 className="text-2xl font-semibold">
             {title} - Season {season} Episode {episode}
           </h1>
+          <HeartComponent
+            id={parseInt(id as string)}
+            media_type={"tv"}
+            title={title as string}
+            className={""}
+            image_path={getImagePath()}
+          />
         </div>
 
         <div className="space-y-6">
@@ -151,16 +157,7 @@ const TVShowPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="md:col-span-1 flex justify-center items-start">
                 <NextImageWithFallback
-                  src={
-                    seasons.find((s: Season) => s.season_number === season)
-                      ?.poster_path
-                      ? `https://image.tmdb.org/t/p/w500/${
-                          seasons.find(
-                            (s: Season) => s.season_number === season
-                          )?.poster_path
-                        }`
-                      : `https://placehold.co/800x1200?text=NOT+FOUND`
-                  }
+                  src={getImagePath()}
                   alt={`${title} Season ${season}`}
                   width={800}
                   height={1200}

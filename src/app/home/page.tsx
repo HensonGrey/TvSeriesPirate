@@ -12,6 +12,7 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const validateSearch = (searchQuery: string): string | null => {
     const trimmedQuery = searchQuery.trim();
@@ -51,6 +52,7 @@ export default function Home() {
   useEffect(() => {
     const fetchUserFavourites = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch("/api/watch-list", {
           method: "GET",
         });
@@ -75,11 +77,20 @@ export default function Home() {
         dispatch(setCurrentlyWatchingList(data));
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchUserFavourites();
     fetchUserCurrentlyWatching();
   }, []);
+
+  if (isLoading)
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <div className="w-12 h-12 border-4 border-t-transparent border-blue-500 border-solid rounded-full animate-spin"></div>
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-slate-700 flex flex-col justify-center items-center px-4">
