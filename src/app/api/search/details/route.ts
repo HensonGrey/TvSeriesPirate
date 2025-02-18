@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 //api route to get shallow details i.e description, image, episode numbers for a season etc
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
@@ -40,6 +40,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
     const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
