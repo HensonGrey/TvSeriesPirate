@@ -1,5 +1,6 @@
 declare global {
-  let prisma: PrismaClient | undefined;
+  // eslint-disable-next-line no-var
+  var prisma: PrismaClient | undefined;
 }
 
 export {};
