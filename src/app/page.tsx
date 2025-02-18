@@ -8,6 +8,8 @@ export default function Page() {
   const router = useRouter();
   const session = useSession();
 
+  console.log(`DATABASE_URL: ${process.env.DATABASE_URL}`);
+
   useEffect(() => {
     if (session.status === "authenticated") router.replace("/home");
   }, [router, session.status]);
