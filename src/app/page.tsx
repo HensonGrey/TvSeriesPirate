@@ -18,8 +18,10 @@ export default function Page() {
   );
 }
 
-export async function getServerSideProps() {
+export const getStaticProps = async () => {
   console.log("DATABASE_URL:", process.env.DATABASE_URL);
-  console.log(process.env);
-  return { props: {} };
-}
+
+  return {
+    props: {},
+  };
+};
