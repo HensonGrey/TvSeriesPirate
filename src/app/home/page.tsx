@@ -83,7 +83,7 @@ export default function Home() {
     };
     fetchUserFavourites();
     fetchUserCurrentlyWatching();
-  }, []);
+  }, [dispatch]);
 
   if (isLoading)
     return (

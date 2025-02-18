@@ -2,7 +2,7 @@ import { getCurrentUser } from "@/services/watchListService";
 import { NextRequest, NextResponse } from "next/server";
 
 //returns user's currentlyWatching list
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET() {
   try {
     const { user, status, message } = await getCurrentUser();
 

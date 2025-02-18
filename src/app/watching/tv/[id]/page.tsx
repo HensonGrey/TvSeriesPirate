@@ -99,7 +99,7 @@ const TVShowPage = () => {
       }
     };
     saveShowData();
-  }, [season, episode]);
+  }, [season, episode, id, dispatch]);
 
   return (
     <div className="p-4">

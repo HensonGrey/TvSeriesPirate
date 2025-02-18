@@ -2,10 +2,9 @@
 import { FavouriteCard } from "@/components/FavouriteCard";
 import { RootState } from "@/store/store";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 export default function Favourites() {
-  const dispatch = useDispatch();
   const favourites = useSelector((state: RootState) => state.favourites);
 
   return (

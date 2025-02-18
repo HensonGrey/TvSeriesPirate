@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
 }
 
 //removing a show from favourites
-export async function DELETE(req: NextRequest, res: NextResponse) {
+export async function DELETE(req: NextRequest) {
   try {
     const body = await req.json();
     const { showId, showType } = body;

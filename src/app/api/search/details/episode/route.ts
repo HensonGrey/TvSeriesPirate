@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 //details for an episode of a tv show
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
 
