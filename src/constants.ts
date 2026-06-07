@@ -7,8 +7,8 @@ const providers: ProviderProps[] = [
     url: `https://www.2embed.stream/embed/`,
     button_title: "2embed.stream",
   },
-  { index: 1, url: `https://vidsrc.net/embed`, button_title: "vidsrc.net" },
-  { index: 2, url: `https://vidsrc.in/embed`, button_title: "vidsrc.in" },
-  { index: 3, url: `https://vidsrc.pm/embed`, button_title: "vidsrc.pm" },
+  { index: 1, url: `https://vidsrcme.ru/embed`, button_title: "vidsrcme.ru" },
+  { index: 2, url: `https://vidsrcme.su/embed`, button_title: "vidsrcme.su" },
+  { index: 3, url: `https://vsrc.su/embed`, button_title: "vsrc.su" },
 ];
 export { API_KEY, providers };
